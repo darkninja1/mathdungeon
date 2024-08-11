@@ -1,7 +1,7 @@
 import './App.css'
 
 const enemies = {
-  level1:`{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Hp":1000,"Atk":100,"Def":100,"Level":1}`
+  level1:`{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}`
 };
 const character = {
   name: 'Alice',
@@ -41,7 +41,14 @@ const renderGame = () => {
   document.getElementById('enemyImg').src = JSON.parse(enemies.level1).Img;
   game.playerCopy = character;
   game.enemyCopy = JSON.parse(enemies.level1);
+  playEnemyMusic(game.enemyCopy.Music);
   renderActions();
+};
+const playEnemyMusic = (music) => {
+  const audio = new Audio("./music/enemies/"+music);
+  audio.load();
+  audio.play();
+  audio.loop = true;
 };
 const renderActions = () => {
   document.getElementById('actionsList').innerHTML = '';
@@ -65,6 +72,7 @@ const useAction = () => {
   //change opacity of images based on hp
   tab(4);
   let problem = "";
+  document.getElementById('answer').focus();
   switch (character.gradeLevel) {
     case 1:
       let type = Math.floor(Math.random() * 2);
@@ -95,9 +103,12 @@ const useAction = () => {
 };
 const checkAnswer = () => {
   let answer = document.getElementById('answer').value;
-  alert(game.answer);
   if (game.answer == answer) {
     actionSuccess();
+    document.getElementById('answer').value = '';
+  }
+  else {
+    
   }
 };
 const actionSuccess = () => {
@@ -118,15 +129,12 @@ const actionSuccess = () => {
     }
   }
   if (action.damage) {
-    let enemy = game.enemyCopy;
-    enemy.Hp -= action.damage;
-    document.getElementById('enemyHp').style.width = (enemy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
-    if (enemy.Hp <= 0) {
+    game.enemyCopy.Hp -= action.damage;
+    document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
+    if (game.enemyCopy.Hp <= 0) {
       alert('You won!');
       character.exp += enemy.Level * 100;
       character.level++;
-      character.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').max;
-      character.stats.find(s => s.stat === 'mana').value = character.stats.find(s => s.stat === 'mana').max;
       tab(0);
       return;
     }
@@ -169,7 +177,9 @@ const tab = function(tab2) {
       break;
     case 3:
       changeBg("maple.jpg");
-      renderGame();
+      if (game.turn === 0) {
+        renderGame();
+      }
       break;
     case 2:
       renderCharacter();
@@ -217,9 +227,11 @@ export default function App() {
         </div>
       </div>
       <div className='tab'>
-        <h1>Question</h1>
-        <div id='question'></div>
-        <input type='text' id='answer' placeholder='Type answer here...'/><button onClick={() => checkAnswer()}>Submit</button>
+        <div className='question'>
+          <h1>Question</h1>
+          <div id='question'></div>
+          <div className='inputAnswer'><input type='text' id='answer' placeholder='Type answer here...'/><button onClick={() => checkAnswer()}>Submit</button></div>
+        </div>
       </div>
     </main>
   )

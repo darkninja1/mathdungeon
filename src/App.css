@@ -227,3 +227,46 @@ body {
 #actionsList .selected {
   background:var(--otherotherColor) !important;
 }
+.question {
+  text-align:center;
+  justify-content:center;
+}
+#question {
+  font-size:40px;
+}
+.question > h1 {
+  font-size:60px;
+}
+.inputAnswer {
+  display:flex;
+}
+.inputAnswer > input {
+  flex:calc(80vw - 86px);
+  margin:20px;
+  padding:5px 20px;
+  border-radius:50px;
+  height:40px;
+  font-size:25px;
+  background:var(--otherColor);
+  color:var(--color);
+  border:3px solid transparent;
+  outline:none;
+  transition:0.2s linear;
+}
+.inputAnswer > input:focus {
+  border:3px solid var(--color);
+}
+.inputAnswer > button {
+  flex:calc(20vw);
+  margin:20px;
+  background:var(--color);
+  color:var(--otherColor);
+  border-radius:50px;
+  border:none;
+  transition:0.2s linear;
+}
+.inputAnswer > button:hover {
+  cursor:pointer;
+  background:var(--otherColor);
+  color:var(--color);
+}
