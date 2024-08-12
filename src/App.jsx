@@ -85,7 +85,7 @@ const triggerSlashEffect = (thing,lines,times) => {
 const renderGame = () => {
   document.getElementById('playerImg').src = character.image;
   document.getElementById('enemyImg').src = JSON.parse(enemies.level1).Img;
-  game.playerCopy = character;
+  game.playerCopy = JSON.parse(JSON.stringify(character));
   game.enemyCopy = JSON.parse(enemies.level1);
   playEnemyMusic(game.enemyCopy.Music);
   renderActions();
@@ -170,8 +170,13 @@ const checkAnswer = () => {
   document.getElementById('answer').value = '';
 };
 const actionFailed = () => {
-  game.playerCopy.stats[4].value -= game.enemyCopy.Atk;
-  document.getElementById('playerHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
+  if (game.playerCopy.stats[4].value - game.enemyCopy.Atk <= 0) {
+    tab(5);
+  }
+  else {
+    game.playerCopy.stats[4].value -= game.enemyCopy.Atk;
+    document.getElementById('playerHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
+  }
 };
 const actionSuccess = () => {
   //change opacity of images based on hp
@@ -298,6 +303,18 @@ export default function App() {
           <div id='question'></div>
           <div className='inputAnswer'><input type='text' id='answer' placeholder='Type answer here...'/><button onClick={() => checkAnswer()}>Submit</button></div>
         </div>
+      </div>
+      <div className='tab'>
+        Game Over, You Died :(
+      </div>
+      <div className='tab'>
+        
+      </div>
+      <div className='tab'>
+
+      </div>
+      <div className='tab'>
+
       </div>
     </main>
   )
