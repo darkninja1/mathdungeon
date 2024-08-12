@@ -85,8 +85,14 @@ const useAction = () => {
           game.answer = num1 + num2;
         }
         else {
-          problem = num1+" - "+num2+" = ?";
-          game.answer = num1 - num2;
+          if (num1 < num2) {
+            problem = num2+" - "+num1+" = ?";
+            game.answer = num2 - num1;
+          }
+          else {
+            problem = num1+" - "+num2+" = ?";
+            game.answer = num1 - num2;
+          }
         }
       }
       else {
@@ -105,11 +111,14 @@ const checkAnswer = () => {
   let answer = document.getElementById('answer').value;
   if (game.answer == answer) {
     actionSuccess();
-    document.getElementById('answer').value = '';
   }
   else {
-    
+    actionFailed();
   }
+  document.getElementById('answer').value = '';
+};
+const actionFailed = () => {
+  game.playerCopy.Hp -= game.enemyCopy.Atk;
 };
 const actionSuccess = () => {
   //change opacity of images based on hp
@@ -122,7 +131,7 @@ const actionSuccess = () => {
     }
     character.stats.find(s => s.stat === 'mana').value -= action.mana;
   }
-  if (action.heal) {
+  if (action.heal) { // this does not work
     character.stats.find(s => s.stat === 'hp').value += action.heal;
     if (character.stats.find(s => s.stat === 'hp').value > character.stats.find(s => s.stat === 'hp').max) {
       character.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').max;
@@ -148,6 +157,7 @@ const renderCharacter = () => {
   document.getElementById('chExp').textContent = "Exp "+character.exp;
   document.getElementById('chImg').src = character.image;
   let stats = document.getElementById('chStats');
+  stats.innerHTML = '';
   for (let i = 0; i < character.stats.length; i++) {
     let stat = document.createElement('div');
     stat.className = 'stat';
@@ -186,6 +196,7 @@ const tab = function(tab2) {
       break;
   };
 };
+// document.getElementById('answer').addEventListener
 export default function App() {
   return (
     <main>
@@ -199,7 +210,7 @@ export default function App() {
         
       </div>
       <div className='tab'>
-        <div className='character'>
+        <div className='character' onClick={() => tab(0)}>
           <div>
             <div id='chName'></div>
             <div id='chMains'><div id='chLvl'></div><div id='chExp'></div></div>
