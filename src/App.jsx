@@ -190,9 +190,9 @@ const actionSuccess = () => {
     character.stats.find(s => s.stat === 'mana').value -= action.mana;
   }
   if (action.heal) { // this does not work
-    character.stats.find(s => s.stat === 'hp').value += action.heal;
-    if (character.stats.find(s => s.stat === 'hp').value > character.stats.find(s => s.stat === 'hp').max) {
-      character.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').max;
+    game.playerCopy.stats.find(s => s.stat === 'hp').value += action.heal;
+    if (game.playerCopy.stats.find(s => s.stat === 'hp').value > character.stats.find(s => s.stat === 'hp').value) {
+        game.playerCopy.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').value;
     }
   }
   if (action.damage) {
