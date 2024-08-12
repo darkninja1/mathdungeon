@@ -171,14 +171,14 @@ const checkAnswer = () => {
 };
 const actionFailed = () => {
   game.playerCopy.stats[4].value -= game.enemyCopy.Atk;
-  document.getElementById('enemyHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
+  document.getElementById('playerHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
 };
 const actionSuccess = () => {
   //change opacity of images based on hp
   tab(3);
   let action = character.actions.find(a => a.name === game.actionSelected);
   if (action.mana) {
-    if (character.stats.find(s => s.stat === 'mana').value < action.mana) {
+    if (game.playerCopy.stats.find(s => s.stat === 'mana').value < action.mana) {
       alert('Not enough mana');
       return;
     }
