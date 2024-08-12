@@ -34,7 +34,53 @@ const game = {
   playerTurn:true,
   answer:null,
   correct:[],
-  incorrect:[]
+  incorrect:[],
+  on:false
+};
+const getRandomColorLine = () => {
+      const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
+      return colors[Math.floor(Math.random() * colors.length)];
+};
+const triggerSlashEffect = (thing,lines,times) => {
+    const overlay = thing;
+
+    for (let i = 0; i < lines; i++) {
+        const slash = document.createElement('div');
+        slash.classList.add('slash');
+
+        const color = getRandomColorLine();
+        const svg = `
+            <svg viewBox="0 0 100 2" preserveAspectRatio="none">
+                <line x1="0" y1="1" x2="100" y2="1" stroke="${color}" stroke-width="2" />
+            </svg>`;
+
+        slash.innerHTML = svg;
+
+        const rotation = Math.random() * 90 - 45;
+        slash.style.transform = `rotate(${rotation}deg)`;
+
+        const startY = Math.random() * window.innerHeight;
+
+        slash.style.top = `${startY}px`;
+        slash.style.opacity = '1';
+
+        overlay.appendChild(slash);
+        
+
+        setTimeout(() => {
+            slash.style.opacity = '0';
+        }, 50);
+
+        setTimeout(() => {
+            slash.remove();
+        }, 750);
+        playSound("slash.mp3");
+    }
+    if (times > 1) { 
+      setTimeout(() =>{
+        triggerSlashEffect(thing,lines,(times-1));
+      },1000);
+    }
 };
 const renderGame = () => {
   document.getElementById('playerImg').src = character.image;
@@ -49,6 +95,11 @@ const playEnemyMusic = (music) => {
   audio.load();
   audio.play();
   audio.loop = true;
+};
+const playSound = (sound) => {
+  const audio = new Audio("./sounds/"+sound);
+  audio.load();
+  audio.play();
 };
 const renderActions = () => {
   document.getElementById('actionsList').innerHTML = '';
@@ -114,11 +165,13 @@ const checkAnswer = () => {
   }
   else {
     actionFailed();
+    tab(3);
   }
   document.getElementById('answer').value = '';
 };
 const actionFailed = () => {
-  game.playerCopy.Hp -= game.enemyCopy.Atk;
+  game.playerCopy.stats[4].value -= game.enemyCopy.Atk;
+  document.getElementById('enemyHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
 };
 const actionSuccess = () => {
   //change opacity of images based on hp
@@ -138,6 +191,7 @@ const actionSuccess = () => {
     }
   }
   if (action.damage) {
+    triggerSlashEffect(document.getElementById('enemyBox'),1,5);
     game.enemyCopy.Hp -= action.damage;
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
@@ -187,8 +241,9 @@ const tab = function(tab2) {
       break;
     case 3:
       changeBg("maple.jpg");
-      if (game.turn === 0) {
+      if (!game.on) {
         renderGame();
+        game.on = true;
       }
       break;
     case 2:
@@ -223,7 +278,7 @@ export default function App() {
       </div>
       <div className='tab'>
         <div className='gameSpace'>
-          <div className='player'>
+          <div className='player' id='playerBox'>
             <img id='playerImg' />
             <div className='hpBar'><div id='playerHp'></div></div>
           </div>
@@ -231,7 +286,7 @@ export default function App() {
             <div id='actionsList'></div>
             <button id='use' onClick={() => useAction()}>Use</button>
           </div>
-          <div className='enemy'>
+          <div className='enemy' id='enemyBox'>
             <img id='enemyImg' />
             <div className='hpBar'><div id='enemyHp'></div></div>
           </div>
