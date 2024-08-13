@@ -18,7 +18,7 @@ const character = {
   ],
   actions: [
     { name: 'Attack', damage: 100 },
-    { name: 'Heal', heal: 100, mana: 20 },
+    { name: 'Light Heal', heal: 100, mana: 20 },
     { name: 'Magic', damage: 200, mana: 30 }
   ],
   gradeLevel: 1
@@ -124,13 +124,14 @@ const useAction = () => {
   tab(4);
   let problem = "";
   document.getElementById('answer').focus();
+  let type,num1,num2,num3,plusminus, inc;
   switch (character.gradeLevel) {
-    case 1:
-      let type = Math.floor(Math.random() * 2);
+      case 0:
+      type = Math.floor(Math.random() * 2);
       if (type === 0) {
-        let num1 = Math.floor(Math.random() * 50);
-        let num2 = Math.floor(Math.random() * 50);
-        let plusminus = Math.floor(Math.random() * 2);
+        num1 = Math.floor(Math.random() * 10);
+        num2 = Math.floor(Math.random() * 10);
+        plusminus = Math.floor(Math.random() * 2);
         if (plusminus === 0) {
           problem = num1+" + "+num2+" = ?";
           game.answer = num1 + num2;
@@ -147,10 +148,40 @@ const useAction = () => {
         }
       }
       else {
-        let num1 = Math.floor(Math.random() * 50);
-        let inc = Math.floor(Math.random() * 6);
-        let num2 = num1+inc;
-        let num3 = num2+inc;
+        num1 = Math.floor(Math.random() * 10);
+        inc = Math.floor(Math.random() * 4);
+        num2 = num1+inc;
+        num3 = num2+inc;
+        problem = num1+", "+num2+", "+num3+", ?";
+        game.answer = num3+inc;
+      }
+      break;
+    case 1:
+      type = Math.floor(Math.random() * 2);
+      if (type === 0) {
+        num1 = Math.floor(Math.random() * 50);
+        num2 = Math.floor(Math.random() * 50);
+        plusminus = Math.floor(Math.random() * 2);
+        if (plusminus === 0) {
+          problem = num1+" + "+num2+" = ?";
+          game.answer = num1 + num2;
+        }
+        else {
+          if (num1 < num2) {
+            problem = num2+" - "+num1+" = ?";
+            game.answer = num2 - num1;
+          }
+          else {
+            problem = num1+" - "+num2+" = ?";
+            game.answer = num1 - num2;
+          }
+        }
+      }
+      else {
+        num1 = Math.floor(Math.random() * 50);
+        inc = Math.floor(Math.random() * 6);
+        num2 = num1+inc;
+        num3 = num2+inc;
         problem = num1+", "+num2+", "+num3+", ?";
         game.answer = num3+inc;
       }
@@ -170,12 +201,12 @@ const checkAnswer = () => {
   document.getElementById('answer').value = '';
 };
 const actionFailed = () => {
-  if (game.playerCopy.stats[4].value - game.enemyCopy.Atk <= 0) {
+  if (game.playerCopy.stats.find(s => s.stat === 'hp').value - game.enemyCopy.Atk <= 0) {
     tab(5);
   }
   else {
-    game.playerCopy.stats[4].value -= game.enemyCopy.Atk;
-    document.getElementById('playerHp').style.width = (game.playerCopy.stats[4].value/character.stats[4].value)*100 + '%';
+    game.playerCopy.stats.find(s => s.stat === 'hp').value -= game.enemyCopy.Atk;
+    document.getElementById('playerHp').style.width = (game.playerCopy.stats.find(s => s.stat === 'hp').value/character.stats.find(s => s.stat === 'hp').value)*100 + '%';
   }
 };
 const actionSuccess = () => {
@@ -187,16 +218,18 @@ const actionSuccess = () => {
       alert('Not enough mana');
       return;
     }
-    character.stats.find(s => s.stat === 'mana').value -= action.mana;
+    game.playerCopy.stats.find(s => s.stat === 'mana').value -= action.mana;
+    document.getElementById('playerMp').style.width = (game.playerCopy.stats.find(s => s.stat === 'mana').value/character.stats.find(s => s.stat === 'mana').value)*100 + '%';
   }
   if (action.heal) { // this does not work
     game.playerCopy.stats.find(s => s.stat === 'hp').value += action.heal;
     if (game.playerCopy.stats.find(s => s.stat === 'hp').value > character.stats.find(s => s.stat === 'hp').value) {
-        game.playerCopy.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').value;
+        game.playerCopy.stats.find(s => s.stat === 'hp').value = character.stats.find(s => s.stat === 'hp').value; 
     }
+    document.getElementById('playerHp').style.width = (game.playerCopy.stats.find(s => s.stat === 'hp').value/character.stats.find(s => s.stat === 'hp').value)*100 + '%';
   }
   if (action.damage) {
-    triggerSlashEffect(document.getElementById('enemyBox'),1,5);
+    triggerSlashEffect(document.getElementById('enemyBox'),3,5);
     game.enemyCopy.Hp -= action.damage;
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
@@ -285,6 +318,7 @@ export default function App() {
         <div className='gameSpace'>
           <div className='player' id='playerBox'>
             <img id='playerImg' />
+            <div className='mpBar'><div id='playerMp'></div></div>
             <div className='hpBar'><div id='playerHp'></div></div>
           </div>
           <div className='actions'>
@@ -301,7 +335,9 @@ export default function App() {
         <div className='question'>
           <h1>Question</h1>
           <div id='question'></div>
-          <div className='inputAnswer'><input type='text' id='answer' placeholder='Type answer here...'/><button onClick={() => checkAnswer()}>Submit</button></div>
+          <div className='inputAnswer'>
+            <input type='text' id='answer' placeholder='Type answer here...'/>
+            <button onClick={() => checkAnswer()}>Submit</button></div>
         </div>
       </div>
       <div className='tab'>

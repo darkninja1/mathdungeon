@@ -13,6 +13,9 @@ img {
   --overlayColor:rgba(0,0,0,0.65);
   --otherColor:rgb(43, 43, 43);
   --otherotherColor:#bababa;
+  --green:#57a857;
+  --blue:#5555b9;
+  --red:#d25151;
   --selectionMenu:33.333vw;
 }
 *::-webkit-scrollbar {
@@ -142,6 +145,7 @@ body {
   height:100vh;
   margin:0;
   padding:0;
+  overflow:hidden;
 }
 .gameSpace > div {
   flex:33.333vw;
@@ -161,16 +165,7 @@ body {
   filter: brightness(75%);
   z-index:1;
 }
-.hpBar {
-  width:100%;
-  height:20px;
-  background:var(--otherColor);
-  border-radius:10px;
-  margin:0;
-  padding:0;
-  position:absolute;
-  bottom:0;
-}
+
 .actions {
   width:100%;
   height:100%;
@@ -185,7 +180,7 @@ body {
   height:40px;
   border-radius:40px;
   font-size:25px;
-  background:var(--otherColor);
+  background:var(--red);
   color:var(--color);
   border:0;
   transition:0.2s linear;
@@ -197,10 +192,38 @@ body {
   box-shadow:0px 0px 10px 3px var(--hoverColor);
   cursor:pointer;
 }
+.hpBar {
+  width:100%;
+  height:20px;
+  background:var(--otherColor);
+  border-radius:10px;
+  margin:0;
+  padding:0;
+  position:absolute;
+  bottom:0;
+}
+.mpBar {
+  width:100%;
+  height:20px;
+  background:var(--otherColor);
+  border-radius:10px;
+  margin:0;
+  padding:0;
+  position:absolute;
+  bottom:25px;
+}
+#playerMp {
+  width:100%;
+  height:100%;
+  background:var(--blue);
+  border-radius:10px;
+  margin:0;
+  padding:0;
+}
 #playerHp,#enemyHp {
   width:100%;
   height:100%;
-  background:var(--color);
+  background:var(--green);
   border-radius:10px;
   margin:0;
   padding:0;
@@ -239,14 +262,14 @@ body {
 }
 .inputAnswer {
   display:flex;
+  font-size:25px;
 }
 .inputAnswer > input {
-  flex:calc(80vw - 86px);
+  flex:calc(80% - 86px);
   margin:20px;
   padding:5px 20px;
   border-radius:50px;
   height:40px;
-  font-size:25px;
   background:var(--otherColor);
   color:var(--color);
   border:3px solid transparent;
@@ -257,7 +280,7 @@ body {
   border:3px solid var(--color);
 }
 .inputAnswer > button {
-  flex:calc(20vw);
+  flex:calc(20% - 40px);
   margin:20px;
   background:var(--color);
   color:var(--otherColor);
@@ -284,4 +307,22 @@ body {
   width: 100%;
   height: 2px;
   filter: drop-shadow(0 0 15px);
+}
+
+
+/* Mobile */
+@media (max-width: 768px) {
+  .bg {
+    width: 100%;
+    height: 100%;
+  }
+  .selectionMenu btn {
+    font-size:20px;
+  }
+  .gameSpace {
+    flex-direction:column;
+  }
+  .gameSpace {
+    height:auto;
+  }
 }
