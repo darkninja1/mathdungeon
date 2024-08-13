@@ -308,6 +308,62 @@ body {
   height: 2px;
   filter: drop-shadow(0 0 15px);
 }
+.settings {
+  text-align:center;
+  justify-content:center;
+}
+.settings > h1 {
+  font-size:60px;
+}
+.settings > button {
+  width:calc(100% - 40px);
+  margin:20px;
+  padding:0px 20px;
+  height:40px;
+  border-radius:40px;
+  font-size:25px;
+  background:var(--blue);
+  color:var(--color);
+  border:0;
+  transition:0.2s linear;
+}
+.settings > button:hover {
+  transform:scale(1.1);
+  box-shadow:0px 0px 10px 3px var(--hoverColor);
+  cursor:pointer;
+}
+#snackbar {
+  visibility: hidden;
+  width: 250px;
+  left: 50%;
+  margin-left: -125px;
+  background-color: var(--overlayColor);
+  color: var(--color);
+  text-align: center;
+  border-radius: 2px;
+  padding: 10px 16px;
+  position: fixed;
+  z-index: 100000;
+  bottom: 30px;
+  font-size: 17px;
+  backdrop-filter: blur(10px);
+}
+
+#snackbar.showed {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
 
 
 /* Mobile */

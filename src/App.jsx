@@ -24,7 +24,9 @@ const character = {
   gradeLevel: 1
 };
 const page = {
-  tab:0
+  tab:0,
+  alertQ: [],
+  alertOpen: false
 };
 const game = {
   playerCopy:null,
@@ -215,7 +217,7 @@ const actionSuccess = () => {
   let action = character.actions.find(a => a.name === game.actionSelected);
   if (action.mana) {
     if (game.playerCopy.stats.find(s => s.stat === 'mana').value < action.mana) {
-      alert('Not enough mana');
+      newAlert("Not enough mana","#d25151");
       return;
     }
     game.playerCopy.stats.find(s => s.stat === 'mana').value -= action.mana;
@@ -233,7 +235,7 @@ const actionSuccess = () => {
     game.enemyCopy.Hp -= action.damage;
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
-      alert('You won!');
+      newAlert("You Won!","#57a857"); // replace with end screen
       character.exp += enemy.Level * 100;
       character.level++;
       tab(0);
@@ -289,18 +291,63 @@ const tab = function(tab2) {
       break;
   };
 };
+const selectGrade = () => {
+  const levels = [0,1];
+  const gradelevel = parseInt(document.getElementById('grade').value);
+  if (levels.includes(gradelevel)) {
+    console.log("hi");
+    character.gradeLevel = gradelevel;
+    newAlert("Saved!","#57a857");
+  }
+  else {
+    newAlert("Error","#d25151");
+  }
+};
+const alert10 = () => {
+  if (!page.alertOpen) {
+    page.alertOpen = true;
+    document.getElementById("snackbar").innerHTML = page.alertQ[0][0];
+    if (page.alertQ[0][1]) {
+      document.getElementById("snackbar").style.backgroundColor = page.alertQ[0][1];
+    }
+    let x = document.getElementById("snackbar");
+    x.className = "showed";
+    setTimeout(() => {
+      page.alertQ.splice(0,1);
+      page.alertOpen = false;
+      if (page.alertQ.length > 0) {
+        alert10();
+      }
+      else {
+        x.className = x.className.replace("showed", "");
+      }
+    }, 3000);
+  }
+};
+const newAlert = (message, color) => {
+  page.alertQ.push([message, color]);
+  alert10();
+};
 // document.getElementById('answer').addEventListener
 export default function App() {
   return (
     <main>
      <div className='bg'></div>
+      <div id="snackbar"></div>
       <div className='tab show'>
         <div className='selectionMenu'>
           <btn onClick={() => tab(3)}>Battle</btn><btn onClick={() => tab(2)}>Character</btn><btn onClick={() => tab(1)}>Settings</btn>
         </div>
       </div>
       <div className='tab'>
-        
+        <div className='settings'>
+          <h1>Settings</h1>
+          <div className='inputAnswer'>
+            <input placeholder='Grade Level' type='text' id='grade' />
+            <button onClick={() => selectGrade()}>Save</button>
+          </div>
+          <button onClick={() => tab(0)}>Back</button>
+        </div>
       </div>
       <div className='tab'>
         <div className='character' onClick={() => tab(0)}>
@@ -341,16 +388,18 @@ export default function App() {
         </div>
       </div>
       <div className='tab'>
-        Game Over, You Died :(
+        <h1>Game Over, You Died :(</h1>
+        {/* Back to Home btn dark red background*/}
       </div>
       <div className='tab'>
-        
+        <h1>Victory</h1>
+        {/* Character level and exp bar and next boss btn and home btn */}
       </div>
       <div className='tab'>
-
+        {/* Loading new game */}
       </div>
       <div className='tab'>
-
+        {/* unlocked levels menu */}
       </div>
     </main>
   )
