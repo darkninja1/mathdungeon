@@ -126,7 +126,6 @@ const useAction = () => {
   let problem = "";
   document.getElementById('answer').focus();
   let type, num1, num2, num3, num4, plusminus, inc, multdiv;
-
   switch (character.gradeLevel) {
     case 0: // Kindergarten
       type = Math.floor(Math.random() * 2);
@@ -302,11 +301,16 @@ const actionSuccess = () => {
     game.enemyCopy.Hp -= action.damage;
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
-      newAlert("You Won!","#57a857"); // replace with end screen
-      character.exp += enemy.Level * 100;
-      character.level++;
-      tab(0);
-      return;
+        newAlert("You Won!", "#57a857"); //replace with end screen
+        const expEarned = JSON.parse(enemies.level1).Level * 100;
+        const expStat = character.stats.find(s => s.stat === 'exp');
+        expStat.value += expEarned;
+        const getNextLevelExp = level => level * 100 + 150;
+        while (expStat.value >= getNextLevelExp(character.level)) {
+            character.level++;
+        }
+        tab(0);
+        return;
     }
   }
   game.turn++;
@@ -402,14 +406,16 @@ export default function App() {
      <div className='bg'></div>
       <div id="snackbar"></div>
       <div className='tab show'>
+        <h1>Select</h1>
         <div className='selectionMenu'>
           <btn onClick={() => tab(3)}>Battle</btn><btn onClick={() => tab(2)}>Character</btn><btn onClick={() => tab(1)}>Settings</btn>
         </div>
       </div>
       <div className='tab'>
+        <h1>Settings</h1>
+        <h4>0(kindergarten) - 3(grade)</h4>
+        <h4>Default is 1st grade</h4>
         <div className='settings'>
-          <h1>Settings</h1>
-          <h4>0(kindergarten) - 3</h4>
           <div className='inputAnswer'>
             <input placeholder='Grade Level' type='text' id='grade' />
             <button onClick={() => selectGrade()}>Save</button>
@@ -447,8 +453,8 @@ export default function App() {
         </div>
       </div>
       <div className='tab'>
+        <h1>Question</h1>
         <div className='question'>
-          <h1>Question</h1>
           <div id='question'></div>
           <div className='inputAnswer'>
             <input type='text' id='answer' placeholder='Type answer here...'/>

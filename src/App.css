@@ -74,6 +74,10 @@ body {
 .tab {
   display:none;
 }
+.tab > h1 {
+  font-size:60px;
+  text-align:center;
+}
 .show {
   display:block;
 }
@@ -257,9 +261,6 @@ body {
 #question {
   font-size:40px;
 }
-.question > h1 {
-  font-size:60px;
-}
 .inputAnswer {
   display:flex;
   font-size:25px;
@@ -311,9 +312,6 @@ body {
 .settings {
   text-align:center;
   justify-content:center;
-}
-.settings > h1 {
-  font-size:60px;
 }
 .settings > button {
   width:calc(100% - 40px);
