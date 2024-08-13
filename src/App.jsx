@@ -122,75 +122,142 @@ const renderActions = () => {
   }
 };
 const useAction = () => {
-  //change opacity of images based on hp
   tab(4);
   let problem = "";
   document.getElementById('answer').focus();
-  let type,num1,num2,num3,plusminus, inc;
+  let type, num1, num2, num3, num4, plusminus, inc, multdiv;
+
   switch (character.gradeLevel) {
-      case 0:
+    case 0: // Kindergarten
       type = Math.floor(Math.random() * 2);
       if (type === 0) {
         num1 = Math.floor(Math.random() * 10);
         num2 = Math.floor(Math.random() * 10);
         plusminus = Math.floor(Math.random() * 2);
         if (plusminus === 0) {
-          problem = num1+" + "+num2+" = ?";
+          problem = num1 + " + " + num2 + " = ?";
           game.answer = num1 + num2;
-        }
-        else {
+        } else {
           if (num1 < num2) {
-            problem = num2+" - "+num1+" = ?";
+            problem = num2 + " - " + num1 + " = ?";
             game.answer = num2 - num1;
-          }
-          else {
-            problem = num1+" - "+num2+" = ?";
+          } else {
+            problem = num1 + " - " + num2 + " = ?";
             game.answer = num1 - num2;
           }
         }
-      }
-      else {
+      } else {
         num1 = Math.floor(Math.random() * 10);
         inc = Math.floor(Math.random() * 4);
-        num2 = num1+inc;
-        num3 = num2+inc;
-        problem = num1+", "+num2+", "+num3+", ?";
-        game.answer = num3+inc;
+        num2 = num1 + inc;
+        num3 = num2 + inc;
+        problem = num1 + ", " + num2 + ", " + num3 + ", ?";
+        game.answer = num3 + inc;
       }
       break;
-    case 1:
+
+    case 1: // Grade 1
       type = Math.floor(Math.random() * 2);
+      if (type === 0) {
+        num1 = Math.floor(Math.random() * 20);
+        num2 = Math.floor(Math.random() * 20);
+        plusminus = Math.floor(Math.random() * 2);
+        if (plusminus === 0) {
+          problem = num1 + " + " + num2 + " = ?";
+          game.answer = num1 + num2;
+        } else {
+          if (num1 < num2) {
+            problem = num2 + " - " + num1 + " = ?";
+            game.answer = num2 - num1;
+          } else {
+            problem = num1 + " - " + num2 + " = ?";
+            game.answer = num1 - num2;
+          }
+        }
+      } else {
+        num1 = Math.floor(Math.random() * 20);
+        inc = Math.floor(Math.random() * 4) + 1;
+        num2 = num1 + inc;
+        num3 = num2 + inc;
+        problem = num1 + ", " + num2 + ", " + num3 + ", ?";
+        game.answer = num3 + inc;
+      }
+      break;
+
+    case 2: // Grade 2
+      type = Math.floor(Math.random() * 3);
       if (type === 0) {
         num1 = Math.floor(Math.random() * 50);
         num2 = Math.floor(Math.random() * 50);
         plusminus = Math.floor(Math.random() * 2);
         if (plusminus === 0) {
-          problem = num1+" + "+num2+" = ?";
+          problem = num1 + " + " + num2 + " = ?";
           game.answer = num1 + num2;
-        }
-        else {
+        } else {
           if (num1 < num2) {
-            problem = num2+" - "+num1+" = ?";
+            problem = num2 + " - " + num1 + " = ?";
             game.answer = num2 - num1;
-          }
-          else {
-            problem = num1+" - "+num2+" = ?";
+          } else {
+            problem = num1 + " - " + num2 + " = ?";
             game.answer = num1 - num2;
           }
         }
-      }
-      else {
+      } else if (type === 1) {
         num1 = Math.floor(Math.random() * 50);
         inc = Math.floor(Math.random() * 6);
-        num2 = num1+inc;
-        num3 = num2+inc;
-        problem = num1+", "+num2+", "+num3+", ?";
-        game.answer = num3+inc;
+        num2 = num1 + inc;
+        num3 = num2 + inc;
+        problem = num1 + ", " + num2 + ", " + num3 + ", ?";
+        game.answer = num3 + inc;
+      } else {
+        num1 = Math.floor(Math.random() * 10);
+        num2 = Math.floor(Math.random() * 10);
+        problem = num1 + " x " + num2 + " = ?";
+        game.answer = num1 * num2;
       }
       break;
-  };
+
+    case 3: // Grade 3
+      type = Math.floor(Math.random() * 3);
+
+      if (type === 0) {
+        num1 = Math.floor(Math.random() * 100);
+        num2 = Math.floor(Math.random() * 100);
+        plusminus = Math.floor(Math.random() * 2);
+        if (plusminus === 0) {
+          problem = num1 + " + " + num2 + " = ?";
+          game.answer = num1 + num2;
+        } else {
+          if (num1 < num2) {
+            problem = num2 + " - " + num1 + " = ?";
+            game.answer = num2 - num1;
+          } else {
+            problem = num1 + " - " + num2 + " = ?";
+            game.answer = num1 - num2;
+          }
+        }
+      } else if (type === 1) {
+        num1 = Math.floor(Math.random() * 13);
+        num2 = Math.floor(Math.random() * 13);
+        problem = num1 + " x " + num2 + " = ?";
+        game.answer = num1 * num2;
+      } else {
+        num2 = Math.floor(Math.random() * 12) + 1;
+        num1 = num2 * Math.floor(Math.random() * 13);
+        problem = num1 + " ÷ " + num2 + " = ?";
+        game.answer = num1 / num2;
+      }
+      break;
+
+
+    default:
+      console.error("Invalid grade level");
+      break;
+  }
+
   document.getElementById('question').innerText = problem;
 };
+
 const checkAnswer = () => {
   let answer = document.getElementById('answer').value;
   if (game.answer == answer) {
@@ -292,7 +359,7 @@ const tab = function(tab2) {
   };
 };
 const selectGrade = () => {
-  const levels = [0,1];
+  const levels = [0,1,2,3];
   const gradelevel = parseInt(document.getElementById('grade').value);
   if (levels.includes(gradelevel)) {
     console.log("hi");
@@ -342,6 +409,7 @@ export default function App() {
       <div className='tab'>
         <div className='settings'>
           <h1>Settings</h1>
+          <h4>0(kindergarten) - 3</h4>
           <div className='inputAnswer'>
             <input placeholder='Grade Level' type='text' id='grade' />
             <button onClick={() => selectGrade()}>Save</button>
