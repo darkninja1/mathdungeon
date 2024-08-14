@@ -330,6 +330,37 @@ body {
   box-shadow:0px 0px 10px 3px var(--hoverColor);
   cursor:pointer;
 }
+.wrong {
+  width:100vw;
+  height:calc(100vh - 150px);
+  background:red;
+  opacity:0.3;
+  color:var(--color);
+  font-size:30px;
+  text-align:center;
+  justify-content:center;
+  padding-top:150px;
+}
+.line-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line {
+  flex-grow: 1;
+  height: 1px;
+  margin: 0 20px;
+  background-color: var(--color);
+}
+.line-text {
+  color:var(--color);
+  margin: 0 10px;
+  white-space: nowrap;
+}
+
+
+
 #snackbar {
   visibility: hidden;
   width: 250px;

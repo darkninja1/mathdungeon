@@ -263,8 +263,8 @@ const checkAnswer = () => {
     actionSuccess();
   }
   else {
-    actionFailed();
-    tab(3);
+    tab(9);
+    document.getElementById('rightAnswer').innerText = "Answer: "+game.answer;
   }
   document.getElementById('answer').value = '';
 };
@@ -297,16 +297,15 @@ const actionSuccess = () => {
     document.getElementById('playerHp').style.width = (game.playerCopy.stats.find(s => s.stat === 'hp').value/character.stats.find(s => s.stat === 'hp').value)*100 + '%';
   }
   if (action.damage) {
-    triggerSlashEffect(document.getElementById('enemyBox'),3,5);
+    triggerSlashEffect(document.getElementById('enemyBox'),10,5);
     game.enemyCopy.Hp -= action.damage;
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
         newAlert("You Won!", "#57a857"); //replace with end screen
         const expEarned = JSON.parse(enemies.level1).Level * 100;
-        const expStat = character.stats.find(s => s.stat === 'exp');
-        expStat.value += expEarned;
+        character.exp += expEarned;
         const getNextLevelExp = level => level * 100 + 150;
-        while (expStat.value >= getNextLevelExp(character.level)) {
+        while (character.exp >= getNextLevelExp(character.level)) {
             character.level++;
         }
         tab(0);
@@ -399,7 +398,12 @@ const newAlert = (message, color) => {
   page.alertQ.push([message, color]);
   alert10();
 };
-// document.getElementById('answer').addEventListener
+const handleKeyPress = (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    checkAnswer();
+  }
+};
 export default function App() {
   return (
     <main>
@@ -457,7 +461,7 @@ export default function App() {
         <div className='question'>
           <div id='question'></div>
           <div className='inputAnswer'>
-            <input type='text' id='answer' placeholder='Type answer here...'/>
+            <input type='text' id='answer' placeholder='Type answer here...' onKeyDown={handleKeyPress} />
             <button onClick={() => checkAnswer()}>Submit</button></div>
         </div>
       </div>
@@ -475,6 +479,19 @@ export default function App() {
       <div className='tab'>
         {/* unlocked levels menu */}
       </div>
+      <div className='tab'>
+        <div className='wrong' onClick={() => {actionFailed();tab(3);}}>
+          <h1>Incorrect</h1>
+          <div className="line-container">
+              <div className="line"></div>
+              <span className="line-text" id='rightAnswer'></span>
+              <div className="line"></div>
+          </div>
+          <br/>
+          Click anywhere to continue
+          </div>
+      </div>
     </main>
   )
 }
+
