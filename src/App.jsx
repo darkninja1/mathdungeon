@@ -412,7 +412,7 @@ export default function App() {
       <div className='tab show'>
         <h1>Select</h1>
         <div className='selectionMenu'>
-          <btn onClick={() => tab(3)}>Battle</btn><btn onClick={() => tab(2)}>Character</btn><btn onClick={() => tab(1)}>Settings</btn>
+          <div onClick={() => tab(3)}>Battle</div><div onClick={() => tab(2)}>Character</div><div onClick={() => tab(1)}>Settings</div>
         </div>
       </div>
       <div className='tab'>
