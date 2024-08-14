@@ -1,7 +1,7 @@
 import './App.css'
 
 const enemies = JSON.parse(`{"Enemies":[{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Shibu Inu","Img":"./images/enemies/shibu.jpg","Music":"BTS (방탄소년단) 'Dynamite' Official MV.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}]}`);
-const character = {
+let character = {
   name: 'Alice',
   image: './images/characters/mc.jpg',
   level:1,
@@ -15,7 +15,7 @@ const character = {
     { stat: 'mana', value: 50 }
   ],
   actions: [
-    { name: 'Attack', damage: 1000 },
+    { name: 'Attack', damage: 100 },
     { name: 'Light Heal', heal: 100, mana: 20 },
     { name: 'Magic', damage: 200, mana: 30 }
   ],
@@ -39,6 +39,9 @@ const game = {
   randomEnemy:null,
   audio:null
 };
+if (localStorage.getItem('character') !== null) {
+  character = JSON.parse(localStorage.getItem('character'));
+}
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -311,10 +314,12 @@ const actionSuccess = () => {
         const getNextLevelExp = level => level * 100 + 100;
         while (character.exp >= getNextLevelExp(character.level)) {
             character.level++;
+            character.exp = 0;
         }
         tab(6);
         game.audio.pause();
         game.audio = null;
+        localStorage.setItem('character', JSON.stringify(character));
         return;
     }
   }
