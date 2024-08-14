@@ -1,8 +1,6 @@
 import './App.css'
 
-const enemies = {
-  level1:`{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}`
-};
+const enemies = JSON.parse(`{"Enemies":[{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Shibu Inu","Img":"./images/enemies/shibu.jpg","Music":"BTS (방탄소년단) 'Dynamite' Official MV.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}]}`);
 const character = {
   name: 'Alice',
   image: './images/characters/mc.jpg',
@@ -17,7 +15,7 @@ const character = {
     { stat: 'mana', value: 50 }
   ],
   actions: [
-    { name: 'Attack', damage: 100 },
+    { name: 'Attack', damage: 1000 },
     { name: 'Light Heal', heal: 100, mana: 20 },
     { name: 'Magic', damage: 200, mana: 30 }
   ],
@@ -37,7 +35,9 @@ const game = {
   answer:null,
   correct:[],
   incorrect:[],
-  on:false
+  on:false,
+  randomEnemy:null,
+  audio:null
 };
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
@@ -45,7 +45,7 @@ const getRandomColorLine = () => {
 };
 const triggerSlashEffect = (thing,lines,times) => {
     const overlay = thing;
-
+    playSound("slash.mp3");
     for (let i = 0; i < lines; i++) {
         const slash = document.createElement('div');
         slash.classList.add('slash');
@@ -76,7 +76,6 @@ const triggerSlashEffect = (thing,lines,times) => {
         setTimeout(() => {
             slash.remove();
         }, 750);
-        playSound("slash.mp3");
     }
     if (times > 1) { 
       setTimeout(() =>{
@@ -85,18 +84,20 @@ const triggerSlashEffect = (thing,lines,times) => {
     }
 };
 const renderGame = () => {
+  let randomEnemy = enemies.Enemies[Math.floor(Math.random() * enemies.Enemies.length)];
+  game.randomEnemy = randomEnemy;
   document.getElementById('playerImg').src = character.image;
-  document.getElementById('enemyImg').src = JSON.parse(enemies.level1).Img;
+  document.getElementById('enemyImg').src = game.randomEnemy.Img;
   game.playerCopy = JSON.parse(JSON.stringify(character));
-  game.enemyCopy = JSON.parse(enemies.level1);
+  game.enemyCopy = JSON.parse(JSON.stringify(game.randomEnemy));
   playEnemyMusic(game.enemyCopy.Music);
   renderActions();
 };
 const playEnemyMusic = (music) => {
-  const audio = new Audio("./music/enemies/"+music);
-  audio.load();
-  audio.play();
-  audio.loop = true;
+  game.audio = new Audio("./music/enemies/"+music);
+  game.audio.load();
+  game.audio.play();
+  game.audio.loop = true;
 };
 const playSound = (sound) => {
   const audio = new Audio("./sounds/"+sound);
@@ -112,6 +113,9 @@ const renderActions = () => {
       button.classList.add('selected');
     }
     if (character.actions[i].mana) {
+      if (game.playerCopy.actions[i].mana > game.playerCopy.stats.find(stat => stat.stat === 'mana').value) {
+        button.disabled = true;
+      }
       button.dataset.mana = character.actions[i].mana;
     }
     button.addEventListener('click', () => {
@@ -299,16 +303,18 @@ const actionSuccess = () => {
   if (action.damage) {
     triggerSlashEffect(document.getElementById('enemyBox'),10,5);
     game.enemyCopy.Hp -= action.damage;
-    document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/JSON.parse(enemies.level1).Hp)*100 + '%';
+    document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/game.randomEnemy.Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
         newAlert("You Won!", "#57a857"); //replace with end screen
-        const expEarned = JSON.parse(enemies.level1).Level * 100;
+        const expEarned = game.randomEnemy.Level * 100;
         character.exp += expEarned;
-        const getNextLevelExp = level => level * 100 + 150;
+        const getNextLevelExp = level => level * 100 + 100;
         while (character.exp >= getNextLevelExp(character.level)) {
             character.level++;
         }
-        tab(0);
+        tab(6);
+        game.audio.pause();
+        game.audio = null;
         return;
     }
   }
@@ -424,7 +430,7 @@ export default function App() {
             <input placeholder='Grade Level' type='text' id='grade' />
             <button onClick={() => selectGrade()}>Save</button>
           </div>
-          <button onClick={() => tab(0)}>Back</button>
+          <button onClick={() => tab(0)} className='backBtn'>Back</button>
         </div>
       </div>
       <div className='tab'>
@@ -471,6 +477,7 @@ export default function App() {
       </div>
       <div className='tab'>
         <h1>Victory</h1>
+        <button onClick={() => tab(0)} className='backBtn'>Back</button>
         {/* Character level and exp bar and next boss btn and home btn */}
       </div>
       <div className='tab'>
