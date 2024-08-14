@@ -41,6 +41,7 @@ const game = {
 };
 if (localStorage.getItem('character') !== null) {
   character = JSON.parse(localStorage.getItem('character'));
+  newAlert("Restored Save!","#5555b9");
 }
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
