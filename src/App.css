@@ -5,7 +5,7 @@ img {
 }
 :root {
   /* --bg:#000000; */
-  --bg:url('./images/bgs/woods.jpg') center center fixed no-repeat;
+  --bg:url('../public/images/bgs/woods.jpg') center center fixed no-repeat;
   --bgColor:rgba(0,0,0,0.6);
   --color:white;
   --topMenuSize:50px;

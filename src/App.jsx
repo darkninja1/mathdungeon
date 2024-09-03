@@ -39,10 +39,12 @@ const game = {
   randomEnemy:null,
   audio:null
 };
+window.addEventListener('DOMContentLoaded', function() {
 if (localStorage.getItem('character') !== null) {
   character = JSON.parse(localStorage.getItem('character'));
   newAlert("Restored Save!","#5555b9");
 }
+});
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -349,7 +351,7 @@ const renderCharacter = () => {
   }
 };
 const changeBg = function(bg) {
-  document.querySelector(':root').style.setProperty('--bg', "url(./images/bgs/"+bg+") no-repeat fixed center center");
+  document.querySelector(':root').style.setProperty('--bg', "url(./public/images/bgs/"+bg+") no-repeat fixed center center");
 };
 const tab = function(tab2) {
   const classes = document.getElementsByClassName("tab");
