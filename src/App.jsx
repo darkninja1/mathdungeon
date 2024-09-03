@@ -351,7 +351,7 @@ const renderCharacter = () => {
   }
 };
 const changeBg = function(bg) {
-  document.querySelector(':root').style.setProperty('--bg', "url(/images/bgs/"+bg+") no-repeat fixed center center");
+  document.querySelector(':root').style.setProperty('--bg', "url(/mathdungeon/images/bgs/"+bg+") no-repeat fixed center center");
 };
 const tab = function(tab2) {
   const classes = document.getElementsByClassName("tab");
