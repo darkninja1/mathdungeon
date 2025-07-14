@@ -2,7 +2,7 @@ import './App.css'
 
 const enemies = JSON.parse(`{"Enemies":[{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Shibu Inu","Img":"./images/enemies/shibu.jpg","Music":"BTS (방탄소년단) 'Dynamite' Official MV.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}]}`);
 let character = {
-  name: 'Alice',
+  name: 'Bob Dap',
   image: './images/characters/mc.jpg',
   level:1,
   exp:0,
