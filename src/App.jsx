@@ -1,6 +1,6 @@
 import './App.css'
 
-const enemies = JSON.parse(`{"Enemies":[{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Shibu Inu","Img":"./images/enemies/shibu.jpg","Music":"BTS (방탄소년단) 'Dynamite' Official MV.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}]}`);
+const enemies = JSON.parse(`{"Enemies":[{"Name":"The Fox","Img":"./images/enemies/TheFox.jpg","Music":"The Fox (What Does The Fox Say_) [Official music video HD].mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Shibu Inu","Img":"./images/enemies/shibu.jpg","Music":"BTS (방탄소년단) 'Dynamite' Official MV.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Sisters","Img":"./images/enemies/sisters.jpg","Music":"sisters.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Demons","Img":"./images/enemies/demon.jpg","Music":"demon.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1},{"Name":"Figurines","Img":"./images/enemies/figurines.jpg","Music":"figurines.mp3","Hp":1000,"Atk":150,"Def":100,"Level":1}]}`);
 let character = {
   name: 'Bob Dap',
   image: './images/characters/mc.jpg',
