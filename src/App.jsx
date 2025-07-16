@@ -40,7 +40,16 @@ const game = {
   randomEnemy:null,
   audio:null
 };
-
+document.addEventListener("DOMContentLoaded", function() {
+if (localStorage.getItem('character') !== null) {
+  try {
+    character = JSON.parse(localStorage.getItem('character'));
+    newAlert("Restored Save!","#5555b9");
+  } catch (e) {
+    console.error("Error parsing saved character:", e);
+  }
+}
+});
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -427,14 +436,6 @@ const handleKeyPress = (event) => {
     checkAnswer();
   }
 };
-if (localStorage.getItem('character') !== null) {
-  try {
-    character = JSON.parse(localStorage.getItem('character'));
-    newAlert("Restored Save!","#5555b9");
-  } catch (e) {
-    console.error("Error parsing saved character:", e);
-  }
-}
 export default function App() {
   return (
     <main>
