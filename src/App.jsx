@@ -40,12 +40,11 @@ const game = {
   randomEnemy:null,
   audio:null
 };
-// window.addEventListener('DOMContentLoaded', function() {
-// if (localStorage.getItem('character') !== null) {
-//   character = JSON.parse(localStorage.getItem('character'));
-//   newAlert("Restored Save!","#5555b9");
-// }
-// });
+if (localStorage.getItem('character') !== null) {
+  character = JSON.parse(localStorage.getItem('character'));
+  newAlert("Restored Save!","#5555b9");
+}
+
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -91,6 +90,10 @@ const triggerSlashEffect = (thing,lines,times) => {
     }
 };
 const renderGame = () => {
+  game.turn = 0;
+  document.getElementById('playerMp').style.width = "100%";
+  document.getElementById('playerHp').style.width = "100%";
+  document.getElementById('enemyHp').style.width = "100%";
   let randomEnemy = enemies.Enemies[Math.floor(Math.random() * enemies.Enemies.length)];
   game.randomEnemy = randomEnemy;
   document.getElementById('playerImg').src = character.image;
@@ -282,6 +285,7 @@ const checkAnswer = () => {
 const actionFailed = () => {
   if ((game.playerCopy.stats.find(s => s.stat === 'hp').value - game.enemyCopy.Atk) <= 0) {
     tab(5);
+    game.on = false;
   }
   else {
     tab(3);
@@ -330,7 +334,8 @@ const actionSuccess = () => {
         tab(6);
         game.audio.pause();
         game.audio = null;
-        // localStorage.setItem('character', JSON.stringify(character));
+        game.on = false;
+        localStorage.setItem('character', JSON.stringify(character));
         return;
     }
   }
@@ -389,6 +394,7 @@ const selectGrade = () => {
   if (levels.includes(gradelevel)) {
     character.gradeLevel = gradelevel;
     newAlert("Saved!","#57a857");
+    localStorage.setItem('character', JSON.stringify(character));
   }
   else {
     newAlert("Error","#d25151");
