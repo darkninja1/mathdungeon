@@ -12,12 +12,13 @@ let character = {
     { stat: 'agi', value: 60 },
     { stat: 'con', value: 50 },
     { stat: 'hp', value: 1000 },
-    { stat: 'mana', value: 50 }
+    { stat: 'mana', value: 500 }
   ],
   actions: [
     { name: 'Attack', damage: 100 },
-    { name: 'Light Heal', heal: 100, mana: 20 },
-    { name: 'Magic', damage: 200, mana: 30 }
+    { name: 'Magic Slash', damage: 200, mana: 300 },
+    { name: 'Light Heal', heal: 100, mana: 200 },
+    { name: 'Intermediate Heal', heal: 200, mana: 400 }
   ],
   gradeLevel: 1
 };
@@ -39,12 +40,12 @@ const game = {
   randomEnemy:null,
   audio:null
 };
-window.addEventListener('DOMContentLoaded', function() {
-if (localStorage.getItem('character') !== null) {
-  character = JSON.parse(localStorage.getItem('character'));
-  newAlert("Restored Save!","#5555b9");
-}
-});
+// window.addEventListener('DOMContentLoaded', function() {
+// if (localStorage.getItem('character') !== null) {
+//   character = JSON.parse(localStorage.getItem('character'));
+//   newAlert("Restored Save!","#5555b9");
+// }
+// });
 const getRandomColorLine = () => {
       const colors = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 0, 255, 0.8)', 'rgba(255, 255, 0, 0.8)', 'rgba(255, 0, 255, 0.8)', 'rgba(0, 255, 255, 0.8)'];
       return colors[Math.floor(Math.random() * colors.length)];
@@ -196,8 +197,8 @@ const useAction = () => {
     case 2: // Grade 2
       type = Math.floor(Math.random() * 3);
       if (type === 0) {
-        num1 = Math.floor(Math.random() * 50);
-        num2 = Math.floor(Math.random() * 50);
+        num1 = Math.floor(Math.random() * 100);
+        num2 = Math.floor(Math.random() * 100);
         plusminus = Math.floor(Math.random() * 2);
         if (plusminus === 0) {
           problem = num1 + " + " + num2 + " = ?";
@@ -230,8 +231,8 @@ const useAction = () => {
       type = Math.floor(Math.random() * 3);
 
       if (type === 0) {
-        num1 = Math.floor(Math.random() * 100);
-        num2 = Math.floor(Math.random() * 100);
+        num1 = Math.floor(Math.random() * 500);
+        num2 = Math.floor(Math.random() * 500);
         plusminus = Math.floor(Math.random() * 2);
         if (plusminus === 0) {
           problem = num1 + " + " + num2 + " = ?";
@@ -291,12 +292,14 @@ const actionSuccess = () => {
   //change opacity of images based on hp
   tab(3);
   let action = character.actions.find(a => a.name === game.actionSelected);
+  let manaless = true;
   if (action.mana) {
     if (game.playerCopy.stats.find(s => s.stat === 'mana').value < action.mana) {
       newAlert("Not enough mana","#d25151");
       return;
     }
     game.playerCopy.stats.find(s => s.stat === 'mana').value -= action.mana;
+    manaless = false;
     document.getElementById('playerMp').style.width = (game.playerCopy.stats.find(s => s.stat === 'mana').value/character.stats.find(s => s.stat === 'mana').value)*100 + '%';
   }
   if (action.heal) { // this does not work
@@ -309,6 +312,9 @@ const actionSuccess = () => {
   if (action.damage) {
     triggerSlashEffect(document.getElementById('enemyBox'),10,5);
     game.enemyCopy.Hp -= action.damage;
+    if (manaless && ((game.playerCopy.stats.find(s => s.stat === 'mana').value + game.playerCopy.stats.find(s => s.stat === 'int').value) <= character.stats.find(s => s.stat === 'mana').value)) {
+      game.playerCopy.stats.find(s => s.stat === 'mana').value += game.playerCopy.stats.find(s => s.stat === 'int').value;
+    }
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/game.randomEnemy.Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
         newAlert("You Won!", "#57a857"); //replace with end screen
@@ -322,7 +328,7 @@ const actionSuccess = () => {
         tab(6);
         game.audio.pause();
         game.audio = null;
-        localStorage.setItem('character', JSON.stringify(character));
+        // localStorage.setItem('character', JSON.stringify(character));
         return;
     }
   }
@@ -379,7 +385,6 @@ const selectGrade = () => {
   const levels = [0,1,2,3];
   const gradelevel = parseInt(document.getElementById('grade').value);
   if (levels.includes(gradelevel)) {
-    console.log("hi");
     character.gradeLevel = gradelevel;
     newAlert("Saved!","#57a857");
   }
@@ -442,7 +447,7 @@ export default function App() {
         </div>
       </div>
       <div className='tab'>
-        <div className='character' onClick={() => tab(0)}>
+        <div className='character'>
           <div>
             <div id='chName'></div>
             <div id='chMains'><div id='chLvl'></div><div id='chExp'></div></div>
@@ -452,6 +457,7 @@ export default function App() {
             <img id='chImg' />
           </div>
         </div>
+        <button onClick={() => tab(0)} className='backBtn'>Back</button>
       </div>
       <div className='tab'>
         <div className='gameSpace'>
