@@ -428,8 +428,12 @@ const handleKeyPress = (event) => {
   }
 };
 if (localStorage.getItem('character') !== null) {
-  character = JSON.parse(localStorage.getItem('character'));
-  newAlert("Restored Save!","#5555b9");
+  try {
+    character = JSON.parse(localStorage.getItem('character'));
+    newAlert("Restored Save!","#5555b9");
+  } catch (e) {
+    console.error("Error parsing saved character:", e);
+  }
 }
 export default function App() {
   return (
