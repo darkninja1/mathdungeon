@@ -314,6 +314,7 @@ const actionSuccess = () => {
     game.enemyCopy.Hp -= action.damage;
     if (manaless && ((game.playerCopy.stats.find(s => s.stat === 'mana').value + game.playerCopy.stats.find(s => s.stat === 'int').value) <= character.stats.find(s => s.stat === 'mana').value)) {
       game.playerCopy.stats.find(s => s.stat === 'mana').value += game.playerCopy.stats.find(s => s.stat === 'int').value;
+      document.getElementById('playerMp').style.width = (game.playerCopy.stats.find(s => s.stat === 'mana').value/character.stats.find(s => s.stat === 'mana').value)*100 + '%';
     }
     document.getElementById('enemyHp').style.width = (game.enemyCopy.Hp/game.randomEnemy.Hp)*100 + '%';
     if (game.enemyCopy.Hp <= 0) {
