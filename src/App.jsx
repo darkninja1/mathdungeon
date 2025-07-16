@@ -280,10 +280,11 @@ const checkAnswer = () => {
   document.getElementById('answer').value = '';
 };
 const actionFailed = () => {
-  if (game.playerCopy.stats.find(s => s.stat === 'hp').value - game.enemyCopy.Atk <= 0) {
+  if ((game.playerCopy.stats.find(s => s.stat === 'hp').value - game.enemyCopy.Atk) <= 0) {
     tab(5);
   }
   else {
+    tab(3);
     game.playerCopy.stats.find(s => s.stat === 'hp').value -= game.enemyCopy.Atk;
     document.getElementById('playerHp').style.width = (game.playerCopy.stats.find(s => s.stat === 'hp').value/character.stats.find(s => s.stat === 'hp').value)*100 + '%';
   }
@@ -488,7 +489,7 @@ export default function App() {
       </div>
       <div className='tab'>
         <h1>Game Over, You Died :(</h1>
-        {/* Back to Home btn dark red background*/}
+        <button onClick={() => tab(0)} className='backBtn'>Back</button>
       </div>
       <div className='tab'>
         <h1>Victory</h1>
@@ -502,7 +503,7 @@ export default function App() {
         {/* unlocked levels menu */}
       </div>
       <div className='tab'>
-        <div className='wrong' onClick={() => {actionFailed();tab(3);}}>
+        <div className='wrong' onClick={() => {actionFailed();}}>
           <h1>Incorrect</h1>
           <div className="line-container">
               <div className="line"></div>
